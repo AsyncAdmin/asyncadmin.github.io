@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cod Profile</title>
+    <link rel="icon" href="images/Cod.jpg" type="Images">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --main-blue: #ff0000;
+            --dark-blue: #cc0000;
+            --light-blue: #ff3333;
+            --bg-black: #000000;
+            --bg-darker: #0a0a0a;
+            --card-dark: #111111;
+            --border-grey: #1a1a1a;
+            --white-text: #ffffff;
+            --grey-text: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: var(--bg-black);
+            color: var(--white-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: 
+                linear-gradient(rgba(255, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(255, 0, 0, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.01) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        .floating-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blue-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--main-blue), transparent);
+            opacity: 0.1;
+            animation: floatAround 15s ease-in-out infinite;
+        }
+
+        .blue-orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .blue-orb:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .blue-orb:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 20%;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatAround {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(40px, 10px) scale(1.05); }
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Banner Styles */
+        .profile-banner {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--main-blue);
+            box-shadow: 0 10px 50px rgba(255, 0, 0, 0.3);
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            z-index: 1;
+        }
+
+        /* Profile Section with Avatar */
+        .profile-header-section {
+            position: relative;
+            margin-top: -100px;
+            z-index: 10;
+            padding: 0 60px;
+        }
+
+        .profile-content-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        header {
+            padding: 50px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-light {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .profile-area {
+            position: relative;
+        }
+
+        .profile-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--card-dark), var(--border-grey));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid var(--bg-black);
+            box-shadow: 
+                0 0 50px rgba(255, 0, 0, 0.4),
+                inset 0 0 0 3px var(--main-blue);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-circle::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            background: conic-gradient(from 0deg, var(--main-blue), var(--light-blue), var(--dark-blue), var(--main-blue));
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotateBorder 8s linear infinite;
+        }
+
+        @keyframes rotateBorder {
+            to { transform: rotate(360deg); }
+        }
+
+        .profile-circle:hover {
+            transform: scale(1.08);
+            box-shadow: 
+                0 0 80px rgba(255, 0, 0, 0.6),
+                inset 0 0 0 3px var(--light-blue);
+        }
+
+        .profile-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .main-title {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--main-blue) 50%, var(--light-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .main-subtitle {
+            font-size: 1.5rem;
+            color: var(--grey-text);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--main-blue);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+        }
+
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--main-blue);
+            line-height: 1;
+        }
+
+        .stat-desc {
+            font-size: 0.9rem;
+            color: var(--grey-text);
+            margin-top: 5px;
+        }
+
+        .content-section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-top {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-heading {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--white-text);
+            position: relative;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--main-blue), var(--light-blue));
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .skills-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .skill-item {
+            background: linear-gradient(135deg, var(--card-dark) 0%, rgba(17, 17, 17, 0.8) 100%);
+            border: 1px solid var(--border-grey);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .skill-item:hover::before {
+            left: 100%;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-15px);
+            border-color: var(--main-blue);
+            box-shadow: 0 25px 60px rgba(255, 0, 0, 0.3);
+        }
+
+        .skill-symbol {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: #353535;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .skill-item:hover .skill-symbol {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .skill-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--white-text);
+        }
+
+        .skill-details {
+            color: var(--grey-text);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .products-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .product-box {
+            background: linear-gradient(135deg, var(--card-dark) 0%, rgba(17, 17, 17, 0.95) 100%);
+            border: 1px solid var(--border-grey);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .product-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .product-box:hover::before {
+            opacity: 1;
+        }
+
+        .product-box:hover {
+            transform: translateY(-20px);
+            border-color: var(--main-blue);
+            box-shadow: 0 30px 80px rgba(255, 0, 0, 0.4);
+        }
+
+        .product-img-area {
+            height: 280px;
+            background: linear-gradient(135deg, var(--bg-darker), var(--card-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-info {
+            padding: 40px;
+        }
+
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--white-text);
+        }
+
+        .product-text {
+            color: var(--grey-text);
+            margin-bottom: 30px;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-active {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--main-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.5);
+        }
+
+        .about-section {
+            background: linear-gradient(135deg, var(--card-dark) 0%, rgba(17, 17, 17, 0.8) 100%);
+            border: 1px solid var(--border-grey);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-paragraph {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--grey-text);
+        }
+
+        .about-paragraph strong {
+            color: var(--main-blue);
+            font-weight: 700;
+        }
+
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-grey);
+            background: linear-gradient(135deg, var(--bg-darker), var(--bg-black));
+        }
+
+        .footer-text {
+            color: var(--grey-text);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 20px;
+            }
+
+            .profile-banner {
+                height: 250px;
+            }
+
+            .profile-header-section {
+                padding: 0 20px;
+                margin-top: -80px;
+            }
+
+            .profile-content-wrapper {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .stats-row {
+                gap: 30px;
+            }
+            
+            .products-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-section {
+                padding: 40px 30px;
+            }
+            
+            .about-paragraph {
+                font-size: 1.1rem;
+            }
+            
+            .product-info {
+                padding: 30px;
+            }
+        }
+
+        * {
+            will-change: auto;
+        }
+
+        .profile-circle,
+        .skill-item,
+        .product-box,
+        .action-btn {
+            will-change: transform;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            animation: pageLoad 0.8s ease-out;
+        }
+
+        @keyframes pageLoad {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    
+    <div class="floating-orbs">
+        <div class="blue-orb"></div>
+        <div class="blue-orb"></div>
+        <div class="blue-orb"></div>
+    </div>
+
+    <!-- Banner Section -->
+    <div class="profile-banner">
+        <img src="images/banner.gif" alt="Profile Banner" class="banner-image">
+        <div class="banner-overlay"></div>
+    </div>
+    
+    <div class="main-container">
+        <!-- Profile Header with Avatar -->
+        <div class="profile-header-section">
+            <div class="profile-content-wrapper">
+                <div class="profile-circle">
+                    <img src="images/Cod.jpg" alt="COD"> 
+                </div>
+            </div>
+        </div>
+
+        <header>
+            <div class="header-light"></div>
+            <div class="profile-area">
+                <h1 class="main-title">COD</h1>
+                <p class="main-subtitle">Script Developer/Staff</p>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-num">2+</div>
+                    <div class="stat-desc">Years Moderation Experience</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">2</div>
+                    <div class="stat-desc">Script Projects</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">49%</div>
+                    <div class="stat-desc">Coding Skills</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">15/16</div>
+                    <div class="stat-desc">Age</div>
+            </div>
+        </header>
+
+        <section class="content-section">
+            <div class="section-top">
+                <h2 class="section-heading">My Product</h2>
+            </div>
+            
+            <div class="products-layout">
+                <div class="product-box">
+                    <div class="product-img-area">
+                        <img src="images/AsyncAdmin.PNG" alt="Async Admin" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-badge badge-active">● WORKING</div>
+                        <h3 class="product-title">Async Admin</h3>
+                        <p class="product-text">FE Admin commands script</p>
+                        <a href="" class="action-btn" target="_blank">Coming soon</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="about-content">
+                <h2 class="section-heading">About Me</h2>
+                <p class="about-paragraph"> <strong>Coming soon</strong> 
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="main-container">
+            <div class="footer-text">
+                <p>© 2025 Async Administration</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const watchOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const elementWatcher = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, watchOptions);
+
+        document.querySelectorAll('.skill-item, .product-box').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            elementWatcher.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        class ParticleEngine {
+            constructor() {
+                this.dots = [];
+                this.cursor = { x: 0, y: 0 };
+                this.screen = document.createElement('canvas');
+                this.brush = this.screen.getContext('2d');
+                this.screen.style.position = 'fixed';
+                this.screen.style.top = '0';
+                this.screen.style.left = '0';
+                this.screen.style.pointerEvents = 'none';
+                this.screen.style.zIndex = '-1';
+                document.body.appendChild(this.screen);
+                
+                this.updateSize();
+                this.setup();
+                this.draw();
+                
+                window.addEventListener('resize', () => this.updateSize());
+                document.addEventListener('mousemove', (e) => {
+                    this.cursor.x = e.clientX;
+                    this.cursor.y = e.clientY;
+                });
+            }
+
+            updateSize() {
+                this.screen.width = window.innerWidth;
+                this.screen.height = window.innerHeight;
+            }
+
+            setup() {
+                for (let i = 0; i < 50; i++) {
+                    this.dots.push({
+                        x: Math.random() * this.screen.width,
+                        y: Math.random() * this.screen.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.3 + 0.1
+                    });
+                }
+            }
+
+            draw() {
+                this.brush.clearRect(0, 0, this.screen.width, this.screen.height);
+                
+                this.dots.forEach(dot => {
+                    dot.x += dot.vx;
+                    dot.y += dot.vy;
+                    
+                    if (dot.x < 0 || dot.x > this.screen.width) dot.vx *= -1;
+                    if (dot.y < 0 || dot.y > this.screen.height) dot.vy *= -1;
+                    
+                    this.brush.beginPath();
+                    this.brush.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+                    this.brush.fillStyle = `rgba(255, 0, 0, ${dot.opacity})`;
+                    this.brush.fill();
+                });
+                
+                requestAnimationFrame(() => this.draw());
+            }
+        }
+
+        window.addEventListener('load', () => {
+            new ParticleEngine();
+        });
+    </script>
+
+</body>
+</html> 
